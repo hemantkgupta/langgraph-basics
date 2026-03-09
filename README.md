@@ -190,12 +190,3 @@ Try changing the classifier in [src/my_agent/workflows/planner.py](src/my_agent/
 - Update the edge function so the graph can branch to it
 
 That is exactly how you think when designing a LangGraph workflow.
-
-## Next Module
-
-Module 2 should replace the manual runner with real LangGraph primitives:
-
-- `StateGraph`
-- `add_node`
-- `add_edge`
-- `compile()`
