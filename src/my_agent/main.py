@@ -4,12 +4,19 @@ import argparse
 import json
 
 from my_agent.settings import get_settings
+from my_agent.workflows.first_graph import invoke_module_two_workflow
 from my_agent.workflows.planner import run_module_one_workflow
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run the Module 1 LangGraph basics demo.",
+        description="Run a LangGraph basics module demo.",
+    )
+    parser.add_argument(
+        "--module",
+        choices=("1", "2"),
+        default="2",
+        help="Which learning module to run.",
     )
     parser.add_argument(
         "question",
@@ -23,25 +30,38 @@ def main() -> None:
     args = parse_args()
     settings = get_settings()
     question = args.question or settings.default_question
-    run = run_module_one_workflow(question)
 
-    print("Module 1: State, Nodes, Edges")
-    print(f"Question: {question}")
-    print()
+    if args.module == "1":
+        run = run_module_one_workflow(question)
 
-    for snapshot in run.snapshots:
-        print(f"Node: {snapshot.node}")
-        print("Updates:")
-        print(json.dumps(snapshot.updates, indent=2))
-        print("State after:")
-        print(json.dumps(snapshot.state_after, indent=2))
+        print("Module 1: State, Nodes, Edges")
+        print(f"Question: {question}")
         print()
 
-    print("Route taken:")
-    print(" -> ".join(run.route))
+        for snapshot in run.snapshots:
+            print(f"Node: {snapshot.node}")
+            print("Updates:")
+            print(json.dumps(snapshot.updates, indent=2))
+            print("State after:")
+            print(json.dumps(snapshot.state_after, indent=2))
+            print()
+
+        print("Route taken:")
+        print(" -> ".join(run.route))
+        print()
+        print("Final answer:")
+        print(run.final_state["answer"])
+        return
+
+    result = invoke_module_two_workflow(question)
+    print("Module 2: Your First LangGraph Program")
+    print(f"Question: {question}")
     print()
-    print("Final answer:")
-    print(run.final_state["answer"])
+    print("Graph:")
+    print("START -> classify -> answer -> END")
+    print()
+    print("Final state:")
+    print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":

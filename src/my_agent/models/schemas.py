@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Literal, TypedDict
 
 Route = Literal["math", "coding", "general"]
+ModuleTwoCategory = Literal["math", "coding", "general"]
 NodeName = Literal[
     "classify_question",
     "calculator",
@@ -18,6 +19,12 @@ class AgentState(TypedDict, total=False):
     classification: Route
     documents: list[str]
     result: str
+    answer: str
+
+
+class ModuleTwoState(TypedDict, total=False):
+    question: str
+    category: ModuleTwoCategory
     answer: str
 
 

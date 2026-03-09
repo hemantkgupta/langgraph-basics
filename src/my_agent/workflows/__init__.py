@@ -1,3 +1,4 @@
+from my_agent.workflows.first_graph import get_module_two_app, invoke_module_two_workflow
 from my_agent.workflows.planner import run_module_one_workflow
 
-__all__ = ["run_module_one_workflow"]
+__all__ = ["get_module_two_app", "invoke_module_two_workflow", "run_module_one_workflow"]

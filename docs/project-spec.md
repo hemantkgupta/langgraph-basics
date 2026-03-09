@@ -12,6 +12,11 @@ This repository teaches LangGraph fundamentals in small modules. Module 1 is int
 
 This project is not yet a production agent. It is a learning scaffold that should stay easy to read, test, and extend.
 
+Current teaching stages:
+
+- Module 1: manual workflow using plain Python
+- Module 2: real `StateGraph` with a linear graph
+
 ## Repository Conventions
 
 - Application code lives under `src/my_agent/`
@@ -81,7 +86,8 @@ Current routes:
 Minimum expectations for workflow changes:
 
 - Keep settings coverage in [tests/test_settings.py](../tests/test_settings.py)
-- Keep route coverage in [tests/test_smoke.py](../tests/test_smoke.py)
+- Keep route coverage in [tests/test_module_one.py](../tests/test_module_one.py)
+- Keep compiled graph coverage in [tests/test_module_two.py](../tests/test_module_two.py)
 - Add or update tests for every new route or state field
 
 Canonical commands:
@@ -94,11 +100,13 @@ Canonical commands:
 
 ## Module Boundary
 
-Module 1 does not require the real `langgraph` package yet. That is deliberate.
+Module 1 does not require the real `langgraph` package. That is deliberate.
 
-Module 2 should introduce:
+Module 2 introduces:
 
 - `StateGraph`
 - `add_node`
 - `add_edge`
 - `compile()`
+
+Module 3 should introduce conditional edges and routing.

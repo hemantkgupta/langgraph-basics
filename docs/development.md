@@ -33,16 +33,16 @@ cp .env.example .env
 Use the helper script:
 
 ```bash
-./scripts/dev.sh
-./scripts/dev.sh "What is 7 + 5?"
-./scripts/dev.sh "How should I store expense records in Python?"
+./scripts/dev.sh --module 2 "How to write Python code?"
+./scripts/dev.sh --module 1 "What is 7 + 5?"
+./scripts/dev.sh --module 1 "How should I store expense records in Python?"
 ```
 
 Direct module execution also works:
 
 ```bash
-PYTHONPATH=src ./.venv/bin/python -m my_agent.main
-PYTHONPATH=src ./.venv/bin/python -m my_agent.main "What is LangGraph?"
+PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 2 "How to write Python code?"
+PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 1 "What is LangGraph?"
 ```
 
 ## Run Tests
@@ -89,6 +89,15 @@ The project currently uses a small settings surface:
 - `OPENAI_API_KEY`
 
 The env contract is defined in [src/my_agent/settings.py](../src/my_agent/settings.py).
+
+## LangGraph Dependencies
+
+Module 2 now depends on:
+
+- `langgraph`
+- `langchain-openai`
+
+They are declared in [pyproject.toml](../pyproject.toml), so `uv sync --dev` installs them.
 
 ## Current Quality Bar
 
