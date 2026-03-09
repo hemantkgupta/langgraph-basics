@@ -14,6 +14,7 @@ langgraph-basics/
 │  ├─ module-1.md
 │  ├─ module-2.md
 │  ├─ module-3.md
+│  ├─ module-4.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -26,15 +27,18 @@ langgraph-basics/
 │     ├─ prompts/
 │     │  └─ system.txt
 │     ├─ tools/
+│     │  ├─ agent_tools.py
 │     │  ├─ __init__.py
 │     │  └─ expense_db.py
 │     ├─ workflows/
 │     │  ├─ first_graph.py
 │     │  ├─ planner.py
-│     │  └─ routing_graph.py
+│     │  ├─ routing_graph.py
+│     │  └─ tool_agent_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
+│  ├─ test_module_four.py
 │  ├─ test_module_one.py
 │  ├─ test_module_three.py
 │  ├─ test_module_two.py
@@ -63,6 +67,7 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 4 "calculate 2 + 2"
 ./scripts/dev.sh --module 3 "solve math 2 + 2"
 ./scripts/dev.sh --module 2 "How to write Python code?"
 ./scripts/dev.sh --module 1 "What is 7 + 5?"
@@ -80,6 +85,7 @@ cp .env.example .env
 - Module 1 walkthrough: [docs/module-1.md](docs/module-1.md)
 - Module 2 walkthrough: [docs/module-2.md](docs/module-2.md)
 - Module 3 walkthrough: [docs/module-3.md](docs/module-3.md)
+- Module 4 walkthrough: [docs/module-4.md](docs/module-4.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -178,10 +184,12 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, or 3 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, or 4 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
 - [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
+- [src/my_agent/workflows/tool_agent_graph.py](src/my_agent/workflows/tool_agent_graph.py) contains the tool-using agent graph for Module 4.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
+- [src/my_agent/tools/agent_tools.py](src/my_agent/tools/agent_tools.py) contains the calculator and search tools for Module 4.
 - [src/my_agent/tools/expense_db.py](src/my_agent/tools/expense_db.py) is a simple local tool used by the `search_docs` node.
 - [src/my_agent/settings.py](src/my_agent/settings.py) shows a clean settings pattern for later modules.
 
@@ -256,8 +264,48 @@ The final state looks like this:
 
 The full walkthrough lives in [docs/module-3.md](docs/module-3.md).
 
+## Module 4: Building a Tool-Using Agent in LangGraph
+
+Module 4 introduces the classic tool-using agent pattern:
+
+```text
+User Question
+      ↓
+LLM decides what tool to use
+      ↓
+Execute tool
+      ↓
+LLM produces final answer
+```
+
+The Module 4 graph is:
+
+```text
+START -> decide_tool -> [calculator | search | final_answer] -> END
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 4 "calculate 2 + 2"
+```
+
+The final state looks like this:
+
+```json
+{
+  "question": "calculate 2 + 2",
+  "tool": "calculator",
+  "tool_result": "Calculator result: 4",
+  "answer": "Final answer based on tool result: Calculator result: 4"
+}
+```
+
+The full walkthrough lives in [docs/module-4.md](docs/module-4.md).
+
 ## Common Commands
 
+- Run Module 4: `./scripts/dev.sh --module 4 "calculate 2 + 2"`
 - Run Module 3: `./scripts/dev.sh --module 3 "solve math 2 + 2"`
 - Run Module 2: `./scripts/dev.sh --module 2 "How to write Python code?"`
 - Run Module 1: `./scripts/dev.sh --module 1 "What is 7 + 5?"`
@@ -277,17 +325,20 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 4 should add tool-using agent behavior:
+Module 5 should add ReAct-style agent loops:
 
 ```text
-User Question
-     ↓
-LLM decide tool
-     ↓
-┌─────────────┬──────────────┐
-calculator     web search
-     ↓              ↓
-     └────→ final answer
+LLM
+ ↓
+Tool
+ ↓
+LLM
+ ↓
+Tool
+ ↓
+LLM
+ ↓
+Finish
 ```
 
-That is where LangGraph becomes a real multi-step AI agent.
+That is where LangGraph becomes a real multi-step reasoning agent.

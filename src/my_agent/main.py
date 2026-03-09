@@ -7,6 +7,7 @@ from my_agent.settings import get_settings
 from my_agent.workflows.first_graph import invoke_module_two_workflow
 from my_agent.workflows.routing_graph import invoke_module_three_workflow
 from my_agent.workflows.planner import run_module_one_workflow
+from my_agent.workflows.tool_agent_graph import invoke_module_four_workflow
 
 
 def parse_args() -> argparse.Namespace:
@@ -15,8 +16,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--module",
-        choices=("1", "2", "3"),
-        default="3",
+        choices=("1", "2", "3", "4"),
+        default="4",
         help="Which learning module to run.",
     )
     parser.add_argument(
@@ -66,12 +67,24 @@ def main() -> None:
         print(json.dumps(result, indent=2))
         return
 
-    result = invoke_module_three_workflow(question)
-    print("Module 3: Conditional Routing in LangGraph")
+    if args.module == "3":
+        result = invoke_module_three_workflow(question)
+        print("Module 3: Conditional Routing in LangGraph")
+        print(f"Question: {question}")
+        print()
+        print("Graph:")
+        print("START -> classify -> [math_node | coding_node | general_node] -> END")
+        print()
+        print("Final state:")
+        print(json.dumps(result, indent=2))
+        return
+
+    result = invoke_module_four_workflow(question)
+    print("Module 4: Building a Tool-Using Agent in LangGraph")
     print(f"Question: {question}")
     print()
     print("Graph:")
-    print("START -> classify -> [math_node | coding_node | general_node] -> END")
+    print("START -> decide_tool -> [calculator | search | final_answer] -> END")
     print()
     print("Final state:")
     print(json.dumps(result, indent=2))

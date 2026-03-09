@@ -33,6 +33,7 @@ cp .env.example .env
 Use the helper script:
 
 ```bash
+./scripts/dev.sh --module 4 "calculate 2 + 2"
 ./scripts/dev.sh --module 3 "solve math 2 + 2"
 ./scripts/dev.sh --module 2 "How to write Python code?"
 ./scripts/dev.sh --module 1 "What is 7 + 5?"
@@ -42,6 +43,7 @@ Use the helper script:
 Direct module execution also works:
 
 ```bash
+PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 4 "calculate 2 + 2"
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 3 "solve math 2 + 2"
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 2 "How to write Python code?"
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 1 "What is LangGraph?"
@@ -94,7 +96,7 @@ The env contract is defined in [src/my_agent/settings.py](../src/my_agent/settin
 
 ## LangGraph Dependencies
 
-Modules 2 and 3 now depend on:
+Modules 2, 3, and 4 now depend on:
 
 - `langgraph`
 - `langchain-openai`

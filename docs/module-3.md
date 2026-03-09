@@ -135,4 +135,4 @@ This keeps the system controllable, debuggable, and deterministic.
 
 ## Next Module
 
-Module 4 should turn those routed branches into real tool-using nodes and multi-step agent loops.
+Module 4 turns those routed branches into a real tool-using agent graph with explicit tool nodes and a final answer step.

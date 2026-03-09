@@ -6,6 +6,7 @@ from typing import Any, Literal, TypedDict
 Route = Literal["math", "coding", "general"]
 ModuleTwoCategory = Literal["math", "coding", "general"]
 ModuleThreeCategory = Literal["math", "coding", "general"]
+ModuleFourTool = Literal["calculator", "search", "none"]
 NodeName = Literal[
     "classify_question",
     "calculator",
@@ -32,6 +33,13 @@ class ModuleTwoState(TypedDict, total=False):
 class ModuleThreeState(TypedDict, total=False):
     question: str
     category: ModuleThreeCategory
+    answer: str
+
+
+class ModuleFourState(TypedDict, total=False):
+    question: str
+    tool: ModuleFourTool
+    tool_result: str
     answer: str
 
 
