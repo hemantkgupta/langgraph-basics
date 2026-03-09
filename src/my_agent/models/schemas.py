@@ -7,6 +7,7 @@ Route = Literal["math", "coding", "general"]
 ModuleTwoCategory = Literal["math", "coding", "general"]
 ModuleThreeCategory = Literal["math", "coding", "general"]
 ModuleFourTool = Literal["calculator", "search", "none"]
+ModuleFiveToolRequest = Literal["", "calculator", "search"]
 NodeName = Literal[
     "classify_question",
     "calculator",
@@ -41,6 +42,15 @@ class ModuleFourState(TypedDict, total=False):
     tool: ModuleFourTool
     tool_result: str
     answer: str
+
+
+class ModuleFiveState(TypedDict, total=False):
+    question: str
+    messages: list[str]
+    tool_request: ModuleFiveToolRequest
+    tool_result: str
+    final_answer: str
+    steps: int
 
 
 @dataclass(slots=True)

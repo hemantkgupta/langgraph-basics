@@ -15,6 +15,7 @@ langgraph-basics/
 │  ├─ module-2.md
 │  ├─ module-3.md
 │  ├─ module-4.md
+│  ├─ module-5.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -32,12 +33,14 @@ langgraph-basics/
 │     │  └─ expense_db.py
 │     ├─ workflows/
 │     │  ├─ first_graph.py
+│     │  ├─ loop_agent_graph.py
 │     │  ├─ planner.py
 │     │  ├─ routing_graph.py
 │     │  └─ tool_agent_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
+│  ├─ test_module_five.py
 │  ├─ test_module_four.py
 │  ├─ test_module_one.py
 │  ├─ test_module_three.py
@@ -67,6 +70,7 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 5 "What is 2 + 2?"
 ./scripts/dev.sh --module 4 "calculate 2 + 2"
 ./scripts/dev.sh --module 3 "solve math 2 + 2"
 ./scripts/dev.sh --module 2 "How to write Python code?"
@@ -86,6 +90,7 @@ cp .env.example .env
 - Module 2 walkthrough: [docs/module-2.md](docs/module-2.md)
 - Module 3 walkthrough: [docs/module-3.md](docs/module-3.md)
 - Module 4 walkthrough: [docs/module-4.md](docs/module-4.md)
+- Module 5 walkthrough: [docs/module-5.md](docs/module-5.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -184,8 +189,9 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, or 4 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, or 5 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
+- [src/my_agent/workflows/loop_agent_graph.py](src/my_agent/workflows/loop_agent_graph.py) contains the looping agent graph for Module 5.
 - [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
 - [src/my_agent/workflows/tool_agent_graph.py](src/my_agent/workflows/tool_agent_graph.py) contains the tool-using agent graph for Module 4.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
@@ -303,8 +309,42 @@ The final state looks like this:
 
 The full walkthrough lives in [docs/module-4.md](docs/module-4.md).
 
+## Module 5: Agent Loops in LangGraph
+
+Module 5 introduces the classic agent loop:
+
+```text
+START -> agent -> [tools -> agent | END]
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 5 "What is 2 + 2?"
+```
+
+The final state looks like this:
+
+```json
+{
+  "question": "What is 2 + 2?",
+  "messages": [
+    "Need calculator",
+    "Calculator returned 4",
+    "Tool result received, finishing"
+  ],
+  "tool_request": "",
+  "tool_result": "4",
+  "final_answer": "The answer is based on tool result: 4",
+  "steps": 2
+}
+```
+
+The full walkthrough lives in [docs/module-5.md](docs/module-5.md).
+
 ## Common Commands
 
+- Run Module 5: `./scripts/dev.sh --module 5 "What is 2 + 2?"`
 - Run Module 4: `./scripts/dev.sh --module 4 "calculate 2 + 2"`
 - Run Module 3: `./scripts/dev.sh --module 3 "solve math 2 + 2"`
 - Run Module 2: `./scripts/dev.sh --module 2 "How to write Python code?"`
@@ -325,20 +365,16 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 5 should add ReAct-style agent loops:
+Module 6 should add memory and persistence:
 
 ```text
-LLM
- ↓
-Tool
- ↓
-LLM
- ↓
-Tool
- ↓
-LLM
- ↓
-Finish
+thread memory
+     ↓
+checkpointer
+     ↓
+resume prior state
+     ↓
+multi-turn agent
 ```
 
-That is where LangGraph becomes a real multi-step reasoning agent.
+That is one of LangGraph's biggest practical strengths in production systems.

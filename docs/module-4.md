@@ -125,4 +125,4 @@ That is the core pattern behind coding assistants, research agents, and workflow
 
 ## Next Module
 
-Module 5 should add loops so the agent can think, use a tool, observe the result, and decide again.
+Module 5 adds loops so the agent can think, use a tool, observe the result, and decide again until it is done.
