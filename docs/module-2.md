@@ -83,8 +83,8 @@ PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 2 "How to write Pyth
 - Module 2 uses a real compiled `StateGraph`
 - LangGraph now merges state automatically as nodes run
 
-## Why `langchain-openai` Is Installed
+## Why `langchain` And Provider Packages Are Installed
 
 This module does not need an LLM yet.
 
-The dependency is installed now because the next modules will move from fixed answers to real model-backed nodes.
+The dependencies are installed now because the later modules move from fixed answers to real model-backed nodes.

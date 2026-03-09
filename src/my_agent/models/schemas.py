@@ -61,6 +61,10 @@ class ModuleSixState(TypedDict, total=False):
     reply: str
 
 
+class ModuleSevenState(TypedDict, total=False):
+    messages: Annotated[list[AnyMessage], add_messages]
+
+
 @dataclass(slots=True)
 class StepSnapshot:
     node: NodeName

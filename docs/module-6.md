@@ -124,9 +124,4 @@ That makes LangGraph memory feel closer to:
 
 ## Next Module
 
-Module 7 should combine:
-
-- real LLM calls
-- memory
-- multi-turn chat state
-- thread-scoped conversations
+Module 7 combines real LLM calls, memory, multi-turn chat state, and thread-scoped conversations with either OpenAI or Gemini.

@@ -17,6 +17,7 @@ langgraph-basics/
 │  ├─ module-4.md
 │  ├─ module-5.md
 │  ├─ module-6.md
+│  ├─ module-7.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -34,14 +35,17 @@ langgraph-basics/
 │     │  └─ expense_db.py
 │     ├─ workflows/
 │     │  ├─ first_graph.py
+│     │  ├─ gemini_chat_graph.py
 │     │  ├─ loop_agent_graph.py
 │     │  ├─ memory_graph.py
+│     │  ├─ openai_chat_graph.py
 │     │  ├─ planner.py
 │     │  ├─ routing_graph.py
 │     │  └─ tool_agent_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
+│  ├─ test_module_seven.py
 │  ├─ test_module_six.py
 │  ├─ test_module_five.py
 │  ├─ test_module_four.py
@@ -73,6 +77,8 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."
+./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."
 ./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"
 ./scripts/dev.sh --module 5 "What is 2 + 2?"
 ./scripts/dev.sh --module 4 "calculate 2 + 2"
@@ -96,6 +102,7 @@ cp .env.example .env
 - Module 4 walkthrough: [docs/module-4.md](docs/module-4.md)
 - Module 5 walkthrough: [docs/module-5.md](docs/module-5.md)
 - Module 6 walkthrough: [docs/module-6.md](docs/module-6.md)
+- Module 7 walkthrough: [docs/module-7.md](docs/module-7.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -194,10 +201,12 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, 5, or 6 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, 5, 6, or 7 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
 - [src/my_agent/workflows/loop_agent_graph.py](src/my_agent/workflows/loop_agent_graph.py) contains the looping agent graph for Module 5.
 - [src/my_agent/workflows/memory_graph.py](src/my_agent/workflows/memory_graph.py) contains the memory and persistence graph for Module 6.
+- [src/my_agent/workflows/openai_chat_graph.py](src/my_agent/workflows/openai_chat_graph.py) contains the OpenAI-backed chatbot graph for Module 7.
+- [src/my_agent/workflows/gemini_chat_graph.py](src/my_agent/workflows/gemini_chat_graph.py) contains the Gemini-backed chatbot graph for Module 7.
 - [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
 - [src/my_agent/workflows/tool_agent_graph.py](src/my_agent/workflows/tool_agent_graph.py) contains the tool-using agent graph for Module 4.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
@@ -371,8 +380,37 @@ The CLI runs two turns in one process so the memory behavior is visible:
 
 The full walkthrough lives in [docs/module-6.md](docs/module-6.md).
 
+## Module 7: Real LLM Chatbot with Memory
+
+Module 7 combines:
+
+- message state
+- `add_messages`
+- `InMemorySaver`
+- a real provider-backed chat model
+- `thread_id`-scoped memory
+
+The Module 7 graph is:
+
+```text
+START -> chatbot -> END
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."
+./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."
+```
+
+The CLI runs two turns in one process so you can see memory across turns with the same thread.
+
+The full walkthrough lives in [docs/module-7.md](docs/module-7.md).
+
 ## Common Commands
 
+- Run Module 7 with OpenAI: `./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."`
+- Run Module 7 with Gemini: `./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."`
 - Run Module 6: `./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"`
 - Run Module 5: `./scripts/dev.sh --module 5 "What is 2 + 2?"`
 - Run Module 4: `./scripts/dev.sh --module 4 "calculate 2 + 2"`
@@ -395,16 +433,18 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 7 should add a real chatbot with an LLM plus memory:
+Module 8 should add real tool calling with an LLM plus memory:
 
 ```text
-message state
-     ↓
-real model call
-     ↓
-checkpointer
-     ↓
-multi-turn conversation
+User
+ ↓
+model decides
+ ↓
+tool call
+ ↓
+model interprets result
+ ↓
+answer with memory
 ```
 
-That is usually the point where LangGraph fully clicks as an application framework.
+That is where LangGraph starts to feel like a complete agent platform.

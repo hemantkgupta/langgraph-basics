@@ -17,7 +17,11 @@ class Settings(BaseSettings):
     app_name: str = "langgraph-basics"
     environment: str = "local"
     default_question: str = "What is LangGraph?"
+    openai_model: str = "gpt-4.1-mini"
+    gemini_model: str = "gemini-2.5-flash"
     openai_api_key: str | None = Field(default=None, validation_alias="OPENAI_API_KEY")
+    google_api_key: str | None = Field(default=None, validation_alias="GOOGLE_API_KEY")
+    gemini_api_key: str | None = Field(default=None, validation_alias="GEMINI_API_KEY")
 
 
 @lru_cache(maxsize=1)
