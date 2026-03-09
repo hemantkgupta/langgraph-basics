@@ -18,6 +18,7 @@ langgraph-basics/
 │  ├─ module-5.md
 │  ├─ module-6.md
 │  ├─ module-7.md
+│  ├─ module-8.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -36,15 +37,19 @@ langgraph-basics/
 │     ├─ workflows/
 │     │  ├─ first_graph.py
 │     │  ├─ gemini_chat_graph.py
+│     │  ├─ gemini_tool_call_graph.py
 │     │  ├─ loop_agent_graph.py
 │     │  ├─ memory_graph.py
 │     │  ├─ openai_chat_graph.py
+│     │  ├─ openai_tool_call_graph.py
 │     │  ├─ planner.py
 │     │  ├─ routing_graph.py
+│     │  ├─ tool_calling_graph.py
 │     │  └─ tool_agent_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
+│  ├─ test_module_eight.py
 │  ├─ test_module_seven.py
 │  ├─ test_module_six.py
 │  ├─ test_module_five.py
@@ -77,6 +82,8 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 8 --provider openai --thread-id demo-thread "What is 7 multiplied by 8?"
+./scripts/dev.sh --module 8 --provider gemini --thread-id demo-thread "What is 7 multiplied by 8?"
 ./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."
 ./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."
 ./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"
@@ -103,6 +110,7 @@ cp .env.example .env
 - Module 5 walkthrough: [docs/module-5.md](docs/module-5.md)
 - Module 6 walkthrough: [docs/module-6.md](docs/module-6.md)
 - Module 7 walkthrough: [docs/module-7.md](docs/module-7.md)
+- Module 8 walkthrough: [docs/module-8.md](docs/module-8.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -201,16 +209,19 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, 5, 6, or 7 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1 through 8 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
 - [src/my_agent/workflows/loop_agent_graph.py](src/my_agent/workflows/loop_agent_graph.py) contains the looping agent graph for Module 5.
 - [src/my_agent/workflows/memory_graph.py](src/my_agent/workflows/memory_graph.py) contains the memory and persistence graph for Module 6.
 - [src/my_agent/workflows/openai_chat_graph.py](src/my_agent/workflows/openai_chat_graph.py) contains the OpenAI-backed chatbot graph for Module 7.
 - [src/my_agent/workflows/gemini_chat_graph.py](src/my_agent/workflows/gemini_chat_graph.py) contains the Gemini-backed chatbot graph for Module 7.
+- [src/my_agent/workflows/openai_tool_call_graph.py](src/my_agent/workflows/openai_tool_call_graph.py) contains the OpenAI-backed Module 8 tool-calling app.
+- [src/my_agent/workflows/gemini_tool_call_graph.py](src/my_agent/workflows/gemini_tool_call_graph.py) contains the Gemini-backed Module 8 tool-calling app.
+- [src/my_agent/workflows/tool_calling_graph.py](src/my_agent/workflows/tool_calling_graph.py) contains the shared Module 8 loop, tool execution node, and message serialization.
 - [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
 - [src/my_agent/workflows/tool_agent_graph.py](src/my_agent/workflows/tool_agent_graph.py) contains the tool-using agent graph for Module 4.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
-- [src/my_agent/tools/agent_tools.py](src/my_agent/tools/agent_tools.py) contains the calculator and search tools for Module 4.
+- [src/my_agent/tools/agent_tools.py](src/my_agent/tools/agent_tools.py) contains the calculator and search tools for Module 4 plus the structured `multiply` tool for Module 8.
 - [src/my_agent/tools/expense_db.py](src/my_agent/tools/expense_db.py) is a simple local tool used by the `search_docs` node.
 - [src/my_agent/settings.py](src/my_agent/settings.py) shows a clean settings pattern for later modules.
 
@@ -407,8 +418,38 @@ The CLI runs two turns in one process so you can see memory across turns with th
 
 The full walkthrough lives in [docs/module-7.md](docs/module-7.md).
 
+## Module 8: Tool Calling with a Real LLM + Memory
+
+Module 8 combines:
+
+- message state
+- `add_messages`
+- provider-backed tool calling
+- a tool execution node
+- `InMemorySaver`
+- `thread_id`-scoped memory
+
+The Module 8 graph is:
+
+```text
+START -> agent -> [tools -> agent | END]
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 8 --provider openai --thread-id demo-thread "What is 7 multiplied by 8?"
+./scripts/dev.sh --module 8 --provider gemini --thread-id demo-thread "What is 7 multiplied by 8?"
+```
+
+The CLI runs two turns in one process so you can see tool use on the first turn and memory-backed follow-up behavior on the second turn.
+
+The full walkthrough lives in [docs/module-8.md](docs/module-8.md).
+
 ## Common Commands
 
+- Run Module 8 with OpenAI: `./scripts/dev.sh --module 8 --provider openai --thread-id demo-thread "What is 7 multiplied by 8?"`
+- Run Module 8 with Gemini: `./scripts/dev.sh --module 8 --provider gemini --thread-id demo-thread "What is 7 multiplied by 8?"`
 - Run Module 7 with OpenAI: `./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."`
 - Run Module 7 with Gemini: `./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."`
 - Run Module 6: `./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"`
@@ -433,18 +474,18 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 8 should add real tool calling with an LLM plus memory:
+Module 9 should turn these building blocks into a real project:
 
 ```text
-User
+Spec
  ↓
-model decides
+plan
  ↓
-tool call
+tools and memory
  ↓
-model interprets result
+draft output
  ↓
-answer with memory
+reviewable result
 ```
 
-That is where LangGraph starts to feel like a complete agent platform.
+That is where LangGraph starts to feel like workflow infrastructure instead of isolated demos.

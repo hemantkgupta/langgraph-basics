@@ -33,6 +33,8 @@ cp .env.example .env
 Use the helper script:
 
 ```bash
+./scripts/dev.sh --module 8 --provider openai --thread-id demo-thread "What is 7 multiplied by 8?"
+./scripts/dev.sh --module 8 --provider gemini --thread-id demo-thread "What is 7 multiplied by 8?"
 ./scripts/dev.sh --module 7 --provider openai --thread-id demo-thread "My name is Hemant."
 ./scripts/dev.sh --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."
 ./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"
@@ -47,6 +49,8 @@ Use the helper script:
 Direct module execution also works:
 
 ```bash
+PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 8 --provider openai --thread-id demo-thread "What is 7 multiplied by 8?"
+PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 8 --provider gemini --thread-id demo-thread "What is 7 multiplied by 8?"
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 7 --provider openai --thread-id demo-thread "My name is Hemant."
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 7 --provider gemini --thread-id demo-thread "My name is Hemant."
 PYTHONPATH=src ./.venv/bin/python -m my_agent.main --module 6 --thread-id demo-thread "My name is Hemant"
@@ -108,7 +112,7 @@ The env contract is defined in [src/my_agent/settings.py](../src/my_agent/settin
 
 ## LangGraph Dependencies
 
-Modules 2, 3, 4, 5, 6, and 7 now depend on:
+Modules 2, 3, 4, 5, 6, 7, and 8 now depend on:
 
 - `langgraph`
 - `langchain`

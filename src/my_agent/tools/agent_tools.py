@@ -3,6 +3,8 @@ from __future__ import annotations
 import operator
 import re
 
+from langchain_core.tools import BaseTool, tool
+
 from my_agent.tools.expense_db import search_expense_docs
 
 _MATH_EXPRESSION = re.compile(r"(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)")
@@ -49,3 +51,13 @@ def run_search_tool(question: str) -> str:
         return f"Search result: {documents[0]}"
 
     return "Search result: No matching result found in the demo search index."
+
+
+@tool
+def multiply(a: int, b: int) -> int:
+    """Multiply two integers."""
+    return a * b
+
+
+def get_module_eight_tools() -> list[BaseTool]:
+    return [multiply]

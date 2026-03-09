@@ -129,4 +129,4 @@ The test suite does not call either provider API.
 
 ## Next Module
 
-Module 8 should add real tool calling with a model plus memory.
+Module 8 adds real tool calling with a provider-backed model plus memory.

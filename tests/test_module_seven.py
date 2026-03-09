@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
-from my_agent.main import _default_module_seven_provider
+from my_agent.main import _default_model_provider
 from my_agent.workflows.gemini_chat_graph import (
     build_module_seven_graph as build_gemini_module_seven_graph,
     run_module_seven_demo as run_module_seven_gemini_demo,
@@ -89,7 +89,7 @@ def test_module_seven_serializes_message_history() -> None:
 
 
 def test_module_seven_provider_defaults_to_openai_when_available() -> None:
-    provider = _default_module_seven_provider(
+    provider = _default_model_provider(
         SimpleNamespace(
             openai_api_key="openai-key",
             google_api_key="google-key",
@@ -101,7 +101,7 @@ def test_module_seven_provider_defaults_to_openai_when_available() -> None:
 
 
 def test_module_seven_provider_falls_back_to_gemini() -> None:
-    provider = _default_module_seven_provider(
+    provider = _default_model_provider(
         SimpleNamespace(
             openai_api_key=None,
             google_api_key="google-key",

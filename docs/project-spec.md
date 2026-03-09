@@ -21,6 +21,7 @@ Current teaching stages:
 - Module 5: looping agent graph with stop conditions
 - Module 6: memory and persistence with `InMemorySaver` and `thread_id`
 - Module 7: real provider-backed chatbot with memory
+- Module 8: real tool-calling agent with provider-backed models and memory
 
 ## Repository Conventions
 
@@ -98,6 +99,7 @@ Minimum expectations for workflow changes:
 - Keep loop-agent coverage in [tests/test_module_five.py](../tests/test_module_five.py)
 - Keep memory-thread coverage in [tests/test_module_six.py](../tests/test_module_six.py)
 - Keep real-chatbot graph coverage in [tests/test_module_seven.py](../tests/test_module_seven.py)
+- Keep tool-calling agent coverage in [tests/test_module_eight.py](../tests/test_module_eight.py)
 - Add or update tests for every new route or state field
 
 Canonical commands:
@@ -129,4 +131,6 @@ Module 6 introduces memory, checkpointers, and multi-turn persistence.
 
 Module 7 introduces real model calls on top of persisted chat state.
 
-Module 8 should introduce tool calling with a real model and memory.
+Module 8 introduces real tool calling with provider-backed models, graph-controlled loops, and memory.
+
+Module 9 should introduce a real project built on these patterns.
