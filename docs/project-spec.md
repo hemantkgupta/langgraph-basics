@@ -19,6 +19,7 @@ Current teaching stages:
 - Module 3: conditional routing with `add_conditional_edges()`
 - Module 4: tool-using agent graph with explicit tool nodes
 - Module 5: looping agent graph with stop conditions
+- Module 6: memory and persistence with `InMemorySaver` and `thread_id`
 
 ## Repository Conventions
 
@@ -94,6 +95,7 @@ Minimum expectations for workflow changes:
 - Keep conditional routing coverage in [tests/test_module_three.py](../tests/test_module_three.py)
 - Keep tool-agent coverage in [tests/test_module_four.py](../tests/test_module_four.py)
 - Keep loop-agent coverage in [tests/test_module_five.py](../tests/test_module_five.py)
+- Keep memory-thread coverage in [tests/test_module_six.py](../tests/test_module_six.py)
 - Add or update tests for every new route or state field
 
 Canonical commands:
@@ -121,4 +123,6 @@ Module 4 introduces tool nodes and LLM-style tool selection.
 
 Module 5 introduces multi-step loops and ReAct-style agent behavior.
 
-Module 6 should introduce memory, checkpointers, and multi-turn persistence.
+Module 6 introduces memory, checkpointers, and multi-turn persistence.
+
+Module 7 should introduce real model calls on top of persisted chat state.

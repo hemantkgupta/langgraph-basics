@@ -151,12 +151,7 @@ app = build_module_five_graph().compile(checkpointer=InMemorySaver())
 
 In this repo, `get_module_five_app(use_checkpointer=True)` enables that mode.
 
-This is only a preview. Module 6 should go deeper into:
-
-- thread memory
-- checkpointing
-- resumability
-- multi-turn execution
+This is only a preview. Module 6 adds thread memory, checkpointing, resumability, and multi-turn execution.
 
 ## Why This Matters
 

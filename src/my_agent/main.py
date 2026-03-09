@@ -6,6 +6,7 @@ import json
 from my_agent.settings import get_settings
 from my_agent.workflows.first_graph import invoke_module_two_workflow
 from my_agent.workflows.loop_agent_graph import invoke_module_five_workflow
+from my_agent.workflows.memory_graph import run_module_six_demo, serialize_module_six_state
 from my_agent.workflows.routing_graph import invoke_module_three_workflow
 from my_agent.workflows.planner import run_module_one_workflow
 from my_agent.workflows.tool_agent_graph import invoke_module_four_workflow
@@ -17,9 +18,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--module",
-        choices=("1", "2", "3", "4", "5"),
-        default="5",
+        choices=("1", "2", "3", "4", "5", "6"),
+        default="6",
         help="Which learning module to run.",
+    )
+    parser.add_argument(
+        "--thread-id",
+        default="module-6-demo-thread",
+        help="Thread ID used for memory-enabled module demos.",
+    )
+    parser.add_argument(
+        "--follow-up",
+        default="What did I tell you?",
+        help="Optional second message for the Module 6 memory demo.",
     )
     parser.add_argument(
         "question",
@@ -93,14 +104,31 @@ def main() -> None:
         return
 
     result = invoke_module_five_workflow(question)
-    print("Module 5: Agent Loops in LangGraph")
-    print(f"Question: {question}")
+    if args.module == "5":
+        print("Module 5: Agent Loops in LangGraph")
+        print(f"Question: {question}")
+        print()
+        print("Graph:")
+        print("START -> agent -> [tools -> agent | END]")
+        print()
+        print("Final state:")
+        print(json.dumps(result, indent=2))
+        return
+
+    first_message = args.question or "My name is Hemant"
+    turn_one, turn_two = run_module_six_demo(
+        first_message,
+        args.follow_up,
+        thread_id=args.thread_id,
+    )
+    print("Module 6: Memory and Persistence in LangGraph")
+    print(f"Thread ID: {args.thread_id}")
     print()
-    print("Graph:")
-    print("START -> agent -> [tools -> agent | END]")
+    print("Turn 1:")
+    print(json.dumps(serialize_module_six_state(turn_one), indent=2))
     print()
-    print("Final state:")
-    print(json.dumps(result, indent=2))
+    print("Turn 2:")
+    print(json.dumps(serialize_module_six_state(turn_two), indent=2))
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ langgraph-basics/
 │  ├─ module-3.md
 │  ├─ module-4.md
 │  ├─ module-5.md
+│  ├─ module-6.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -34,12 +35,14 @@ langgraph-basics/
 │     ├─ workflows/
 │     │  ├─ first_graph.py
 │     │  ├─ loop_agent_graph.py
+│     │  ├─ memory_graph.py
 │     │  ├─ planner.py
 │     │  ├─ routing_graph.py
 │     │  └─ tool_agent_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
+│  ├─ test_module_six.py
 │  ├─ test_module_five.py
 │  ├─ test_module_four.py
 │  ├─ test_module_one.py
@@ -70,6 +73,7 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"
 ./scripts/dev.sh --module 5 "What is 2 + 2?"
 ./scripts/dev.sh --module 4 "calculate 2 + 2"
 ./scripts/dev.sh --module 3 "solve math 2 + 2"
@@ -91,6 +95,7 @@ cp .env.example .env
 - Module 3 walkthrough: [docs/module-3.md](docs/module-3.md)
 - Module 4 walkthrough: [docs/module-4.md](docs/module-4.md)
 - Module 5 walkthrough: [docs/module-5.md](docs/module-5.md)
+- Module 6 walkthrough: [docs/module-6.md](docs/module-6.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -189,9 +194,10 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, or 5 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, 3, 4, 5, or 6 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
 - [src/my_agent/workflows/loop_agent_graph.py](src/my_agent/workflows/loop_agent_graph.py) contains the looping agent graph for Module 5.
+- [src/my_agent/workflows/memory_graph.py](src/my_agent/workflows/memory_graph.py) contains the memory and persistence graph for Module 6.
 - [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
 - [src/my_agent/workflows/tool_agent_graph.py](src/my_agent/workflows/tool_agent_graph.py) contains the tool-using agent graph for Module 4.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
@@ -342,8 +348,32 @@ The final state looks like this:
 
 The full walkthrough lives in [docs/module-5.md](docs/module-5.md).
 
+## Module 6: Memory and Persistence in LangGraph
+
+Module 6 introduces thread-scoped memory using a checkpointer and `thread_id`.
+
+The Module 6 graph is:
+
+```text
+START -> chatbot -> END
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"
+```
+
+The CLI runs two turns in one process so the memory behavior is visible:
+
+1. your first message
+2. a follow-up message, defaulting to `What did I tell you?`
+
+The full walkthrough lives in [docs/module-6.md](docs/module-6.md).
+
 ## Common Commands
 
+- Run Module 6: `./scripts/dev.sh --module 6 --thread-id demo-thread "My name is Hemant"`
 - Run Module 5: `./scripts/dev.sh --module 5 "What is 2 + 2?"`
 - Run Module 4: `./scripts/dev.sh --module 4 "calculate 2 + 2"`
 - Run Module 3: `./scripts/dev.sh --module 3 "solve math 2 + 2"`
@@ -365,16 +395,16 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 6 should add memory and persistence:
+Module 7 should add a real chatbot with an LLM plus memory:
 
 ```text
-thread memory
+message state
+     ↓
+real model call
      ↓
 checkpointer
      ↓
-resume prior state
-     ↓
-multi-turn agent
+multi-turn conversation
 ```
 
-That is one of LangGraph's biggest practical strengths in production systems.
+That is usually the point where LangGraph fully clicks as an application framework.
