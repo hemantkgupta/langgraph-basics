@@ -13,6 +13,7 @@ langgraph-basics/
 │  ├─ development.md
 │  ├─ module-1.md
 │  ├─ module-2.md
+│  ├─ module-3.md
 │  └─ project-spec.md
 ├─ pyproject.toml
 ├─ uv.lock
@@ -29,11 +30,13 @@ langgraph-basics/
 │     │  └─ expense_db.py
 │     ├─ workflows/
 │     │  ├─ first_graph.py
-│     │  └─ planner.py
+│     │  ├─ planner.py
+│     │  └─ routing_graph.py
 │     └─ models/
 │        └─ schemas.py
 ├─ tests/
 │  ├─ test_module_one.py
+│  ├─ test_module_three.py
 │  ├─ test_module_two.py
 │  └─ test_settings.py
 └─ scripts/
@@ -60,6 +63,7 @@ cp .env.example .env
 3. Run the demo:
 
 ```bash
+./scripts/dev.sh --module 3 "solve math 2 + 2"
 ./scripts/dev.sh --module 2 "How to write Python code?"
 ./scripts/dev.sh --module 1 "What is 7 + 5?"
 ```
@@ -75,6 +79,7 @@ cp .env.example .env
 - Development workflow: [docs/development.md](docs/development.md)
 - Module 1 walkthrough: [docs/module-1.md](docs/module-1.md)
 - Module 2 walkthrough: [docs/module-2.md](docs/module-2.md)
+- Module 3 walkthrough: [docs/module-3.md](docs/module-3.md)
 - Project conventions and specs: [docs/project-spec.md](docs/project-spec.md)
 
 ## Module 1: Core Concepts of LangGraph
@@ -173,8 +178,9 @@ That is the rule to remember:
 
 ## File Map
 
-- [src/my_agent/main.py](src/my_agent/main.py) runs either Module 1 or Module 2 from the CLI.
+- [src/my_agent/main.py](src/my_agent/main.py) runs Modules 1, 2, or 3 from the CLI.
 - [src/my_agent/workflows/first_graph.py](src/my_agent/workflows/first_graph.py) contains the real LangGraph example for Module 2.
+- [src/my_agent/workflows/routing_graph.py](src/my_agent/workflows/routing_graph.py) contains the conditional routing graph for Module 3.
 - [src/my_agent/workflows/planner.py](src/my_agent/workflows/planner.py) contains the Module 1 manual workflow logic.
 - [src/my_agent/tools/expense_db.py](src/my_agent/tools/expense_db.py) is a simple local tool used by the `search_docs` node.
 - [src/my_agent/settings.py](src/my_agent/settings.py) shows a clean settings pattern for later modules.
@@ -216,8 +222,43 @@ The final state looks like this:
 
 The full walkthrough lives in [docs/module-2.md](docs/module-2.md).
 
+## Module 3: Conditional Routing in LangGraph
+
+Module 3 introduces `add_conditional_edges()` so the graph can branch dynamically.
+
+The Module 3 graph is:
+
+```text
+                classify
+              /    |     \
+           math  coding  general
+            |      |       |
+        math_node coding_node general_node
+            |      |       |
+           END    END     END
+```
+
+Run it with:
+
+```bash
+./scripts/dev.sh --module 3 "solve math 2 + 2"
+```
+
+The final state looks like this:
+
+```json
+{
+  "question": "solve math 2 + 2",
+  "category": "math",
+  "answer": "Use a calculator for this math question."
+}
+```
+
+The full walkthrough lives in [docs/module-3.md](docs/module-3.md).
+
 ## Common Commands
 
+- Run Module 3: `./scripts/dev.sh --module 3 "solve math 2 + 2"`
 - Run Module 2: `./scripts/dev.sh --module 2 "How to write Python code?"`
 - Run Module 1: `./scripts/dev.sh --module 1 "What is 7 + 5?"`
 - Run tests: `./scripts/test.sh`
@@ -236,14 +277,17 @@ That is exactly how you think when designing a LangGraph workflow.
 
 ## Next Module
 
-Module 3 should add conditional routing:
+Module 4 should add tool-using agent behavior:
 
 ```text
-         classify
-        /   |   \
-     math coding general
-      |      |      |
- calculator search   llm
+User Question
+     ↓
+LLM decide tool
+     ↓
+┌─────────────┬──────────────┐
+calculator     web search
+     ↓              ↓
+     └────→ final answer
 ```
 
-That is where LangGraph starts to feel like a real agent workflow.
+That is where LangGraph becomes a real multi-step AI agent.

@@ -16,6 +16,7 @@ Current teaching stages:
 
 - Module 1: manual workflow using plain Python
 - Module 2: real `StateGraph` with a linear graph
+- Module 3: conditional routing with `add_conditional_edges()`
 
 ## Repository Conventions
 
@@ -88,6 +89,7 @@ Minimum expectations for workflow changes:
 - Keep settings coverage in [tests/test_settings.py](../tests/test_settings.py)
 - Keep route coverage in [tests/test_module_one.py](../tests/test_module_one.py)
 - Keep compiled graph coverage in [tests/test_module_two.py](../tests/test_module_two.py)
+- Keep conditional routing coverage in [tests/test_module_three.py](../tests/test_module_three.py)
 - Add or update tests for every new route or state field
 
 Canonical commands:
@@ -109,4 +111,6 @@ Module 2 introduces:
 - `add_edge`
 - `compile()`
 
-Module 3 should introduce conditional edges and routing.
+Module 3 introduces conditional edges and routing.
+
+Module 4 should introduce tool nodes, LLM-driven decisions, and multi-step loops.

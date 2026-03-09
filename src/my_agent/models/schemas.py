@@ -5,6 +5,7 @@ from typing import Any, Literal, TypedDict
 
 Route = Literal["math", "coding", "general"]
 ModuleTwoCategory = Literal["math", "coding", "general"]
+ModuleThreeCategory = Literal["math", "coding", "general"]
 NodeName = Literal[
     "classify_question",
     "calculator",
@@ -25,6 +26,12 @@ class AgentState(TypedDict, total=False):
 class ModuleTwoState(TypedDict, total=False):
     question: str
     category: ModuleTwoCategory
+    answer: str
+
+
+class ModuleThreeState(TypedDict, total=False):
+    question: str
+    category: ModuleThreeCategory
     answer: str
 
 
